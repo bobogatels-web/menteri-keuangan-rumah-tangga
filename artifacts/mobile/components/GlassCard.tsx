@@ -21,7 +21,7 @@ export function GlassCard({ children, style, neonColor = '#00d4ff', padding = 16
         style,
       ]}
     >
-      <View style={[styles.innerBorder, { borderColor: neonColor + '20' }]} />
+      <View style={[styles.innerBorder, { borderColor: neonColor + '20', pointerEvents: 'none' }]} />
       {children}
     </View>
   );
@@ -46,6 +46,5 @@ const styles = StyleSheet.create({
     bottom: 1,
     borderRadius: 15,
     borderWidth: 1,
-    pointerEvents: 'none',
   },
 });

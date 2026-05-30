@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Rect, Text as SvgText, Line } from 'react-native-svg';
 
-const W = Dimensions.get('window').width - 64;
+const W = Math.min(Dimensions.get('window').width - 64, 360);
 const H = 140;
 
 interface BarData {
-  label: string;
+  month: string;
   income: number;
   expense: number;
 }
@@ -19,36 +19,34 @@ interface Props {
 export function ChartBar({ data, title }: Props) {
   if (!data.length) return null;
   const maxVal = Math.max(...data.flatMap(d => [d.income, d.expense]), 1);
-  const barW = Math.max(6, (W - 40) / (data.length * 2.5));
+  const count = data.length;
+  const barW = Math.max(6, (W - 50) / (count * 2.6));
   const gap = barW * 0.5;
+  const groupW = barW * 2 + gap;
 
   return (
     <View style={styles.container}>
       {title && <Text style={styles.title}>{title}</Text>}
       <Svg width={W} height={H + 30}>
-        {/* Grid lines */}
         {[0.25, 0.5, 0.75, 1].map((f, i) => (
           <Line
             key={i}
-            x1={30}
-            x2={W}
-            y1={H - H * f}
-            y2={H - H * f}
-            stroke="rgba(0,212,255,0.1)"
-            strokeWidth={1}
+            x1={30} x2={W}
+            y1={H - H * f} y2={H - H * f}
+            stroke="rgba(0,212,255,0.1)" strokeWidth={1}
           />
         ))}
         {data.map((d, i) => {
-          const groupW = barW * 2 + gap;
-          const x = 30 + i * (groupW + gap);
-          const ih = (d.income / maxVal) * H;
-          const eh = (d.expense / maxVal) * H;
+          const x = 32 + i * (groupW + gap);
+          const ih = Math.max(2, (d.income / maxVal) * H);
+          const eh = Math.max(2, (d.expense / maxVal) * H);
+          const label = d.month.length >= 7 ? d.month.substr(5) : d.month;
           return (
             <React.Fragment key={i}>
               <Rect x={x} y={H - ih} width={barW} height={ih} fill="#00ff88" rx={3} opacity={0.85} />
               <Rect x={x + barW + 2} y={H - eh} width={barW} height={eh} fill="#ff3366" rx={3} opacity={0.85} />
               <SvgText x={x + barW} y={H + 18} fontSize={8} fill="#6b9bb8" textAnchor="middle">
-                {d.label.substr(5)}
+                {label}
               </SvgText>
             </React.Fragment>
           );
@@ -57,8 +55,14 @@ export function ChartBar({ data, title }: Props) {
         <Line x1={30} x2={W} y1={H} y2={H} stroke="rgba(0,212,255,0.2)" strokeWidth={1} />
       </Svg>
       <View style={styles.legend}>
-        <View style={styles.legendItem}><View style={[styles.dot, { backgroundColor: '#00ff88' }]} /><Text style={styles.legendText}>Pemasukan</Text></View>
-        <View style={styles.legendItem}><View style={[styles.dot, { backgroundColor: '#ff3366' }]} /><Text style={styles.legendText}>Pengeluaran</Text></View>
+        <View style={styles.legendItem}>
+          <View style={[styles.dot, { backgroundColor: '#00ff88' }]} />
+          <Text style={styles.legendText}>Pemasukan</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.dot, { backgroundColor: '#ff3366' }]} />
+          <Text style={styles.legendText}>Pengeluaran</Text>
+        </View>
       </View>
     </View>
   );

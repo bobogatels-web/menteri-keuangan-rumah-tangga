@@ -18,7 +18,8 @@ function formatDate(date: string): string {
   return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-const CATEGORY_ICONS: Record<string, string> = {
+const CATEGORY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  // Income sources (English)
   'Photo Editing': 'camera',
   'Shopee Affiliate': 'bag-handle',
   'TikTok Affiliate': 'musical-notes',
@@ -31,6 +32,18 @@ const CATEGORY_ICONS: Record<string, string> = {
   'API Key': 'key',
   'Affiliate Vivi': 'people',
   'Others': 'ellipsis-horizontal',
+  // Expense categories (Indonesian)
+  'Makanan & Minuman': 'restaurant',
+  'Transportasi': 'car',
+  'Belanja': 'cart',
+  'Kesehatan': 'medical',
+  'Pendidikan': 'school',
+  'Hiburan': 'game-controller',
+  'Utilitas': 'flash',
+  'Sewa': 'home',
+  'Rumah Tangga': 'basket',
+  'Lainnya': 'ellipsis-horizontal',
+  // Expense categories (English fallback)
   'Food & Drink': 'restaurant',
   'Transport': 'car',
   'Shopping': 'cart',
@@ -53,7 +66,7 @@ export function TransactionItem({ item, onEdit, onDelete }: Props) {
   const { t } = useApp();
   const isIncome = item.type === 'income';
   const neon = isIncome ? '#00ff88' : '#ff3366';
-  const iconName = (CATEGORY_ICONS[item.category] || 'cash') as keyof typeof Ionicons.glyphMap;
+  const iconName = CATEGORY_ICONS[item.category] ?? 'cash';
 
   const handleDelete = () => {
     Alert.alert(t('confirmDelete'), t('deleteMessage'), [
@@ -74,7 +87,7 @@ export function TransactionItem({ item, onEdit, onDelete }: Props) {
           {item.buyer_name ? ` • ${item.buyer_name}` : ''}
           {item.notes ? ` • ${item.notes}` : ''}
         </Text>
-        {item.status && item.status !== 'received' && (
+        {item.status && item.status !== 'received' && item.status !== 'paid' && (
           <View style={[styles.statusBadge, item.status === 'pending' && styles.pending]}>
             <Text style={styles.statusText}>{item.status}</Text>
           </View>
@@ -123,7 +136,7 @@ const styles = StyleSheet.create({
   meta: { color: '#6b9bb8', fontSize: 11, marginTop: 2 },
   statusBadge: { alignSelf: 'flex-start', backgroundColor: '#ff336630', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, marginTop: 3 },
   pending: { backgroundColor: '#ffdd0030' },
-  statusText: { color: '#ffdd00', fontSize: 10, fontWeight: '600' },
+  statusText: { color: '#ffdd00', fontSize: 10, fontWeight: '600', textTransform: 'capitalize' },
   right: { alignItems: 'flex-end', gap: 4 },
   amount: { fontSize: 14, fontWeight: '700' },
   actions: { flexDirection: 'row', gap: 8 },

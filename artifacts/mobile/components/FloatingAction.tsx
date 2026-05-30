@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { TouchableOpacity, StyleSheet, Animated, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
@@ -10,20 +10,24 @@ interface Props {
   bottom?: number;
 }
 
+const ND = Platform.OS !== 'web';
+
 export function FloatingAction({ onPress, icon = 'add', bottom = 100 }: Props) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(scaleAnim, { toValue: 1.06, duration: 1500, useNativeDriver: true }),
-        Animated.timing(scaleAnim, { toValue: 1, duration: 1500, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1.06, duration: 1500, useNativeDriver: ND }),
+        Animated.timing(scaleAnim, { toValue: 1, duration: 1500, useNativeDriver: ND }),
       ])
     ).start();
   }, [scaleAnim]);
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
     onPress();
   };
 

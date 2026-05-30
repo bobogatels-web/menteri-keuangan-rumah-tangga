@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -17,11 +17,13 @@ interface Props {
 export function BalanceCard({ balance, income, expense, label = 'Total Saldo' }: Props) {
   const glowAnim = useRef(new Animated.Value(0)).current;
 
+  const ND = Platform.OS !== 'web';
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowAnim, { toValue: 1, duration: 2000, useNativeDriver: true }),
-        Animated.timing(glowAnim, { toValue: 0, duration: 2000, useNativeDriver: true }),
+        Animated.timing(glowAnim, { toValue: 1, duration: 2000, useNativeDriver: ND }),
+        Animated.timing(glowAnim, { toValue: 0, duration: 2000, useNativeDriver: ND }),
       ])
     ).start();
   }, [glowAnim]);

@@ -19,17 +19,19 @@ export default function LockScreen() {
   const glowAnim = useRef(new Animated.Value(0)).current;
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
+  const ND = Platform.OS !== 'web';
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(pulseAnim, { toValue: 1.15, duration: 1200, useNativeDriver: true }),
-        Animated.timing(pulseAnim, { toValue: 1, duration: 1200, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1.15, duration: 1200, useNativeDriver: ND }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 1200, useNativeDriver: ND }),
       ])
     ).start();
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowAnim, { toValue: 1, duration: 2000, useNativeDriver: true }),
-        Animated.timing(glowAnim, { toValue: 0, duration: 2000, useNativeDriver: true }),
+        Animated.timing(glowAnim, { toValue: 1, duration: 2000, useNativeDriver: ND }),
+        Animated.timing(glowAnim, { toValue: 0, duration: 2000, useNativeDriver: ND }),
       ])
     ).start();
   }, [pulseAnim, glowAnim]);
@@ -54,24 +56,24 @@ export default function LockScreen() {
 
   const shakeError = () => {
     Animated.sequence([
-      Animated.timing(shakeAnim, { toValue: 10, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: -10, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 10, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 60, useNativeDriver: ND }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 60, useNativeDriver: ND }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 60, useNativeDriver: ND }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: ND }),
     ]).start();
   };
 
   const handlePinDigit = (d: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const next = pin + d;
     setPin(next);
     setError('');
     if (next.length >= 6) {
       if (checkPin(next)) {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        if (Platform.OS !== 'web') Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         unlock();
       } else {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        if (Platform.OS !== 'web') Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         setError(t('wrongPIN'));
         shakeError();
         setTimeout(() => setPin(''), 600);
