@@ -5,20 +5,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Ambil Kode Repo
         uses: actions/checkout@v4
 
-      - name: Set Up Node.js
+      - name: Set Up Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      - name: Instal EAS CLI
+      - name: Instal EAS CLI Terbaru
         run: npm install -g eas-cli
 
       - name: Jalankan Build ke Server Expo
         run: eas build --platform android --profile preview --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          NODE_OPTIONS: "--no-warnings"
