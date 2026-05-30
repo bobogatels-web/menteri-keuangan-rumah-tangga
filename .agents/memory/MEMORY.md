@@ -1,0 +1,1 @@
+- [Expo SQLite Web Setup](expo-sqlite-web.md) — expo-sqlite wasm requires metro.config.js to add "wasm" to assetExts; DBProvider must use useEffect (not useState init) for data loading on web.

@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "Menteri Keuangan Rumah Tangga",
+    "slug": "mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "mobile",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#080818"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.warohathun.mkrt",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Gunakan Face ID atau Touch ID untuk membuka aplikasi",
+        "NSCameraUsageDescription": "Digunakan untuk mengambil foto bukti pembayaran",
+        "NSPhotoLibraryUsageDescription": "Digunakan untuk memilih foto bukti pembayaran"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#080818"
+      },
+      "package": "com.warohathun.mkrt",
+      "permissions": [
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://replit.com/"
+        }
+      ],
+      "expo-font",
+      "expo-sqlite",
+      "expo-local-authentication",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Aplikasi ini membutuhkan akses foto untuk bukti pembayaran",
+          "cameraPermission": "Aplikasi ini membutuhkan akses kamera untuk foto bukti pembayaran"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
